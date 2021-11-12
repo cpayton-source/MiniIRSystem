@@ -170,7 +170,7 @@ public class IRMatrix {
 					line = null;
 
 			}
-			System.out.println(WordCount.toString());
+			//System.out.println(WordCount.toString());
 		
 			// sorting the hashmap
 			Map<String, Integer> treeMap = new TreeMap<>(WordCount);
@@ -210,7 +210,8 @@ public class IRMatrix {
                 //System.out.println("Document Found " + doclist.get(j).getTitle()); //Debugging
                 HashMap<String,Integer> wordCount = TfidfObj.getTermsFromDoc(doclist.get(j),count);
                 docProperties[count].setWordCountMap(wordCount);
-                //System.out.println(wordCount.toString()); //Debugging
+                
+                //System.out.println(); //Debugging
                 HashMap<String,Double> termFrequency = TfidfObj.calculateTermFrequency(docProperties[count].DocWordCounts);
                 docProperties[count].setTermFreqMap(termFrequency);
                 count++;
@@ -220,11 +221,13 @@ public class IRMatrix {
         //System.out.println("Done");
 	    //calculating InverseDocument frequency
         HashMap<String,Double> inverseDocFreqMap = TfidfObj.calculateInverseDocFrequency(docProperties);
+        System.out.println(inverseDocFreqMap.toString());
 
         //Calculating tf-idf
         count = 0;
-        for (int j = 0; j < doclist.size()-1; j++) {
-                HashMap<String,Double> tfIDF = new HashMap<>();
+        HashMap<String,Double> tfIDF = new HashMap<>();
+
+        for (int j = 0; j < doclist.size(); j++) {
                 double tfIdfValue = 0.0;
                 double idfVal = 0.0;
                 HashMap<String,Double> tf = docProperties[count].getTermFreqMap();
@@ -239,7 +242,6 @@ public class IRMatrix {
                     tfIdfValue = tfVal *idfVal;
                     tfIDF.put((pair.getKey().toString()),tfIdfValue);
                 }
-                int fileNameNumber = (count+1);
                 String OutPutPath = "datafile_output.txt";
                 TfidfObj.outputAsText(tfIDF,OutPutPath);
                 count++;
