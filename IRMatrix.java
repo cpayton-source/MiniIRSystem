@@ -3,9 +3,40 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 /*
 This class contains details such as the word frequency count for each term and term frequency for each term of the document.
  */
+ class DocumentProperties{
+
+
+public
+
+     HashMap<String,Double> getTermFreqMap()
+     {
+         return termFreqMap;
+     }
+
+     HashMap<String,Integer> getWordCountMap()
+     {
+         return DocWordCounts;
+     }
+
+     void setTermFreqMap(HashMap<String,Double> inMap)
+     {
+          termFreqMap = new HashMap<String, Double>(inMap);
+     }
+
+
+     void setWordCountMap(HashMap<String,Integer> inMap)
+     {
+         DocWordCounts =new HashMap<String, Integer>(inMap);
+     }
+private
+     HashMap<String,Double> termFreqMap ;
+     HashMap<String,Integer> DocWordCounts;
+}
+
 
 public class IRMatrix {
 	
@@ -112,18 +143,19 @@ public class IRMatrix {
 		}
 
 		//Writes the contents of hashmap to CSV file
-		public  void outputAsText(HashMap<String,Double>treeMap,String OutputPath) throws IOException {
+		public  void outputAsText(String title,BufferedWriter writer, HashMap<String,Double>treeMap,String OutputPath) throws IOException {
 			StringBuilder builder = new StringBuilder();
+			int i = 0;
+			
+    		builder.append(title + "\n");
         	for (Map.Entry<String, Double> keymap : treeMap.entrySet()) {
         		builder.append(keymap.getKey());
         		builder.append(", ");
         		builder.append(keymap.getValue());
         		builder.append("\r\n");
         	}
-        	String content = builder.toString().trim();
-        	BufferedWriter writer = new BufferedWriter(new FileWriter(OutputPath));
+        	String content = builder.toString().trim() + "\n\n";
         	writer.write(content);
-        	writer.close();
 		}
 		//cleaning up the input by removing .,:"
 		public  String cleanseInput(String input)
@@ -191,43 +223,36 @@ public class IRMatrix {
 	    File fileName = new File(scan.nextLine());
 	    Scanner file = new Scanner(fileName);
 	    
-	    int i = 0;
+	    //Adds Documents from File to doclist array
 	    while(file.hasNext()) {
 	    	doclist.add(new document(file.nextLine(), file.nextLine(), file.nextLine()));
-	    	doclist.get(i).getTitle();
-	    	doclist.get(i).getDescription();
-	    	doclist.get(i).getNarrative();
-
-	    	file.nextLine(); //Gets rid of Seperator
-	    	i++;
+	    	file.nextLine(); //Gets rid of Separator
 	    }
 	    
 	    int noOfDocs = doclist.size();
-	    System.out.println("Started");
+        //containers for documents and their properties required to calculate final score
 	    DocumentProperties [] docProperties = new DocumentProperties[noOfDocs];
+	    
 	    for(int j = 0; j < doclist.size(); j++) { 
                 docProperties[count] = new DocumentProperties();
-                //System.out.println("Document Found " + doclist.get(j).getTitle()); //Debugging
                 HashMap<String,Integer> wordCount = TfidfObj.getTermsFromDoc(doclist.get(j),count);
                 docProperties[count].setWordCountMap(wordCount);
-                
-                //System.out.println(); //Debugging
                 HashMap<String,Double> termFrequency = TfidfObj.calculateTermFrequency(docProperties[count].DocWordCounts);
                 docProperties[count].setTermFreqMap(termFrequency);
                 count++;
             
         }
 	    
-        //System.out.println("Done");
 	    //calculating InverseDocument frequency
         HashMap<String,Double> inverseDocFreqMap = TfidfObj.calculateInverseDocFrequency(docProperties);
-        System.out.println(inverseDocFreqMap.toString());
 
         //Calculating tf-idf
         count = 0;
-        HashMap<String,Double> tfIDF = new HashMap<>();
+        String OutPutPath = "datafile_output.txt";
+    	BufferedWriter writer = new BufferedWriter(new FileWriter(OutPutPath));
 
         for (int j = 0; j < doclist.size(); j++) {
+        		HashMap<String,Double> tfIDF = new HashMap<>();
                 double tfIdfValue = 0.0;
                 double idfVal = 0.0;
                 HashMap<String,Double> tf = docProperties[count].getTermFreqMap();
@@ -242,12 +267,12 @@ public class IRMatrix {
                     tfIdfValue = tfVal *idfVal;
                     tfIDF.put((pair.getKey().toString()),tfIdfValue);
                 }
-                String OutPutPath = "datafile_output.txt";
-                TfidfObj.outputAsText(tfIDF,OutPutPath);
+
+                TfidfObj.outputAsText(doclist.get(j).getTitle(),writer, tfIDF,OutPutPath);
                 count++;
             
         }
-        
+    	writer.close();
         System.out.println("Done");
 	    
 	    /*
