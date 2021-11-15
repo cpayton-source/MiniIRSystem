@@ -49,15 +49,15 @@ public class MIRgui implements ActionListener{
 		panel.add(dateText);
 		
 		explanation = new JLabel("Hello! please enter a query for output based off said query.");
-		explanation.setBounds(5, 300, 600, 25);
+		explanation.setBounds(5, 70, 600, 25);
 		panel.add(explanation);
 		
 		questionOne = new JLabel("Query:");
-		questionOne.setBounds(10, 80, 80, 25);
+		questionOne.setBounds(10, 100, 80, 25);
 		panel.add(questionOne);
 		
 		QOneText = new JTextField();
-		QOneText.setBounds(100,80,300,100);
+		QOneText.setBounds(100,120,100,100);
 		
 		panel.add(QOneText);
 
@@ -65,10 +65,6 @@ public class MIRgui implements ActionListener{
 		button.setBounds(10, 230, 80, 25);
 		button.addActionListener(new MIRgui());
 		panel.add(button);
-		
-		success = new JLabel(" ");
-		success.setBounds(100, 230, 300, 300);
-		panel.add(success);
 		frame.setVisible(true);
 	}
 
@@ -76,6 +72,6 @@ public class MIRgui implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		String one = QOneText.getText();
-		success.setText("Test");
+		QOneText.setText("Output has been displayed based off topic " + one);
 	}
 }
