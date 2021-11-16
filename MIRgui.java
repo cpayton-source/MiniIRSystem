@@ -72,6 +72,6 @@ public class MIRgui implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		String one = QOneText.getText();
-		QOneText.setText("Output has been displayed based off topic " + one);
+		QOneText.setText(nameText.getText() + ", " + Output has been displayed based off topic " + one);
 	}
 }
