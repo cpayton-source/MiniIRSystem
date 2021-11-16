@@ -57,7 +57,7 @@ public class MIRgui implements ActionListener{
 		panel.add(questionOne);
 		
 		QOneText = new JTextField();
-		QOneText.setBounds(100,120,100,100);
+		QOneText.setBounds(100,120,600,100);
 		
 		panel.add(QOneText);
 
@@ -72,6 +72,6 @@ public class MIRgui implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		String one = QOneText.getText();
-		QOneText.setText(nameText.getText() + ", " + Output has been displayed based off topic " + one);
+		QOneText.setText(nameText.getText() + " Output has been displayed based off topic " + one);
 	}
 }
